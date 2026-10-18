@@ -15,3 +15,5 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - Offer nylon and steel guitar samples; piano/solfège use piano samples.
 - Check each tapped note immediately. On error, show the tapped syllable and a large red X, play the expected note, then clear the whole answer after the X fades.
 - Completing a melody automatically advances and plays the next. Large success text and a success sound start together 420ms after the last selected note. Level completion adds fanfare and returns to Levels.
+
+- Every level starts with Guitar input and the G CAGED shape selected.
