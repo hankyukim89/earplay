@@ -14,7 +14,7 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - Show the full selected CAGED scale; highlight only the level's available solfège degrees in the target octave and fade the rest. Root dots say Do.
 - Offer nylon and steel guitar samples; piano/solfège use piano samples.
 - Check each tapped note immediately. On error, show the tapped syllable and a large red X, play the tapped note, then clear the whole answer after the X fades.
-- Completing a melody automatically advances and plays the next. Large success text and a success sound start together 420ms after the last selected note. Level completion adds fanfare and returns to Levels.
+- Completing a melody automatically advances and plays the next. Large success text and a success sound start together 420ms after the last selected note. Lesson completion adds fanfare and shows a persistent heart-results screen.
 
 - Every level starts with Guitar input and the G CAGED shape selected.
 - Piano is a compact one-octave close-up with larger keys. Only the current level's target-octave notes are bright/playable; other scale notes remain translucent. Playable keys use a strong yellow hover highlight.
@@ -24,3 +24,11 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - Home keeps Level 0–3 tabs. Within the selected level, show ten large pastel lesson cards stacked vertically, with a large lesson number, colored chips for every available pitch, and a five-note label. The user prefers the original card style over the horizontal lesson path.
 - Instrument type, root, scale inlays, guitar tone, and CAGED controls belong inside a collapsed cogwheel settings panel.
 - Incorrect taps must sound the actual tapped pitch, never the expected pitch. Touch fretboard feedback appears only while pressed; no sticky hover glow.
+
+- Lessons have ten rounds of five notes each. Start with three red hearts and lose one per wrong tap. Three mistakes ends the attempt; restart resets the whole lesson. Completion shows yellow stars and saves the best earned rating: zero mistakes earns three stars, one earns two, and two earns one.
+
+- Use red hearts for gameplay lives and failed attempts; use yellow stars for completion ratings and saved lesson ratings. Show ten progress dots above Play with the numerical round count on their right. The header contains only the level/lesson title alongside navigation and settings.
+
+- Keep a single centered Play melody button; do not add a separate replay button with the same action.
+
+- On final-round success, show Great job and confetti with fanfare first for 2.6 seconds, then display the persistent lesson-results panel.
