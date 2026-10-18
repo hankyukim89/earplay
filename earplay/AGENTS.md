@@ -17,3 +17,4 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - Completing a melody automatically advances and plays the next. Large success text and a success sound start together 420ms after the last selected note. Level completion adds fanfare and returns to Levels.
 
 - Every level starts with Guitar input and the G CAGED shape selected.
+- Piano is a compact one-octave close-up with larger keys. Only the current level's target-octave notes are bright/playable; other scale notes remain translucent. Playable keys use a strong yellow hover highlight.
