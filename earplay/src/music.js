@@ -13,7 +13,20 @@ export const levels=[
 ].map(([name,low,high,scale],i)=>({id:'level-'+i,name,low,high,scale,length:5}));
 export function melody(config){const pool=pitches(typeof config==='number'?levels[config]:config);return Array.from({length:5},(_,i)=>i===0?pool.indexOf(0):Math.floor(Math.random()*pool.length));}
 let context;const buffers=new Map();let active=[];
-async function init(){context??=new AudioContext();await context.resume();return context;}
-async function buffer(midi,instrument){const id=instrument+':'+midi;if(!buffers.has(id)){const name=keys[midi%12]+(Math.floor(midi/12)-1);buffers.set(id,fetch(`${import.meta.env.BASE_URL}audio/${instrument==='guitar'?'guitar/':instrument==='steel'?'steel/':''}${name}.mp3`).then(r=>{if(!r.ok)throw Error('Sound sample unavailable');return r.arrayBuffer()}).then(b=>context.decodeAudioData(b)).catch(e=>{buffers.delete(id);throw e}));}return buffers.get(id);}
+function withTimeout(promise,ms,message){let timer;return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(message)),ms)})]).finally(()=>clearTimeout(timer));}
+// Called synchronously by lesson and Play taps, before any effects or fetching.
+export async function unlockAudio(){
+ const Audio=globalThis.AudioContext||globalThis.webkitAudioContext;
+ if(!Audio)throw new Error('Audio is not supported in this browser. Open this page in Safari or Chrome.');
+ try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch{/* Optional on older browsers. */}
+ if(!context||context.state==='closed'){context=new Audio();buffers.clear();}
+ const c=context;
+ const resumed=c.state==='running'?Promise.resolve():c.resume();
+ const silent=c.createBufferSource();silent.buffer=c.createBuffer(1,1,c.sampleRate);silent.connect(c.destination);silent.start(0);
+ await withTimeout(resumed,4000,'Audio is blocked. Tap Play melody to enable sound.');
+ if(c.state!=='running')throw new Error('Audio is paused. Tap Play melody to enable sound.');
+ return c;
+}
+async function buffer(midi,instrument){const id=instrument+':'+midi;if(!buffers.has(id)){const name=keys[midi%12]+(Math.floor(midi/12)-1);buffers.set(id,withTimeout(fetch(`${import.meta.env.BASE_URL}audio/${instrument==='guitar'?'guitar/':instrument==='steel'?'steel/':''}${name}.mp3`),15000,'Sound download timed out. Check your connection and tap Play melody.').then(r=>{if(!r.ok)throw Error('Sound sample unavailable');return r.arrayBuffer()}).then(b=>context.decodeAudioData(b)).catch(e=>{buffers.delete(id);throw e}));}return buffers.get(id);}
 export function stop(){active.forEach(n=>{try{n.stop()}catch{}});active=[];}
-export async function playNotes(midis,spacing=.55,instrument='piano'){const c=await init();const b=await Promise.all(midis.map(m=>buffer(m,instrument)));const start=c.currentTime+.04;b.forEach((buf,i)=>{const s=c.createBufferSource(),g=c.createGain();s.buffer=buf;s.connect(g);g.connect(c.destination);const t=start+i*spacing;g.gain.setValueAtTime(.8,t);g.gain.setValueAtTime(.8,t+.32);g.gain.exponentialRampToValueAtTime(.001,t+1.5);s.start(t);s.stop(t+1.6);active.push(s);s.onended=()=>{active=active.filter(a=>a!==s)};});return (midis.length-1)*spacing*1000+650;}
+export async function playNotes(midis,spacing=.55,instrument='piano'){const c=await unlockAudio();const b=await Promise.all(midis.map(m=>buffer(m,instrument)));if(c.state!=='running')throw new Error('Audio was interrupted. Tap Play melody to try again.');const start=c.currentTime+.04;b.forEach((buf,i)=>{const s=c.createBufferSource(),g=c.createGain();s.buffer=buf;s.connect(g);g.connect(c.destination);const t=start+i*spacing;g.gain.setValueAtTime(.8,t);g.gain.setValueAtTime(.8,t+.32);g.gain.exponentialRampToValueAtTime(.001,t+1.5);s.start(t);s.stop(t+1.6);active.push(s);s.onended=()=>{active=active.filter(a=>a!==s)};});return (midis.length-1)*spacing*1000+650;}
