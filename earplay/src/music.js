@@ -11,7 +11,7 @@ export const levels=[
  ['First steps',0,4,'major'],['Add Fa',0,5,'major'],['Up to Sol',0,7,'major'],['Add La',0,9,'major'],['All seven',0,11,'major'],['Upper Do',0,12,'major'],
  ['Lower Ti',-1,12,'major'],['Lower La',-3,12,'major'],['Lower Sol',-5,12,'major'],['Minor',-5,12,'minor'],['Major + minor',-5,12,'both'],['Pentatonic',-5,12,'pentatonic'],['Minor pentatonic',-5,12,'minorPentatonic'],['Dorian',-5,12,'dorian'],['Mixolydian',-5,12,'mixolydian'],['Lydian',-5,12,'lydian'],['Phrygian',-5,12,'phrygian'],['Locrian',-5,12,'locrian'],['Harmonic minor',-5,12,'harmonic'],['Melodic minor',-5,12,'melodic'],['Chromatic',-5,12,'chromatic']
 ].map(([name,low,high,scale],i)=>({id:'level-'+i,name,low,high,scale,length:5}));
-export function melody(config){const pool=pitches(typeof config==='number'?levels[config]:config);return Array.from({length:5},(_,i)=>i===0?pool.indexOf(0):Math.floor(Math.random()*pool.length));}
+export function melody(config,length=5){const pool=pitches(typeof config==='number'?levels[config]:config);return Array.from({length},(_,i)=>i===0?pool.indexOf(0):Math.floor(Math.random()*pool.length));}
 let context;const buffers=new Map();let active=[];
 function withTimeout(promise,ms,message){let timer;return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(message)),ms)})]).finally(()=>clearTimeout(timer));}
 // Called synchronously by lesson and Play taps, before any effects or fetching.

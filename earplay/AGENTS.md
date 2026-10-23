@@ -18,17 +18,19 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 
 - Every level starts with Guitar input and the G CAGED shape selected.
 - Piano is a compact one-octave close-up with larger keys. Only the current level's target-octave notes are bright/playable; other scale notes remain translucent. Playable keys use a strong yellow hover highlight.
-- Every round has exactly five notes. Levels increase pitch vocabulary and range, descending gradually to Sol below the root, then add minor, modes, and chromatic material.
+- Melody length is adjustable in settings from 2–10 notes, default 5. Playback speed is adjustable from 0.5×–2×, default 1×. Remember both settings locally across reloads. Levels increase pitch vocabulary and range, descending gradually to Sol below the root, then add minor, modes, and chromatic material.
 - Keep level cards compact and the mint/purple UI simple. Custom levels support scale, root, and range, and can be saved, edited, and deleted locally.
 
 - Home keeps Level 0–3 tabs. Within the selected level, show ten large pastel lesson cards stacked vertically, with a large lesson number, colored chips for every available pitch, and a five-note label. The user prefers the original card style over the horizontal lesson path.
 - Instrument type, root, scale inlays, guitar tone, and CAGED controls belong inside a collapsed cogwheel settings panel.
 - Incorrect taps must sound the actual tapped pitch, never the expected pitch. Touch fretboard feedback appears only while pressed; no sticky hover glow.
 
-- Lessons have ten rounds of five notes each. Start with three red hearts and lose one per wrong tap. Three mistakes ends the attempt; restart resets the whole lesson. Completion shows yellow stars and saves the best earned rating: zero mistakes earns three stars, one earns two, and two earns one.
+- Lessons have ten rounds with the selected melody length. Start with three red hearts and lose one per wrong tap. Three mistakes ends the attempt; restart resets the whole lesson. Completion shows yellow stars and saves the best earned rating: zero mistakes earns three stars, one earns two, and two earns one.
 
 - Use red hearts for gameplay lives and failed attempts; use yellow stars for completion ratings and saved lesson ratings. Show ten progress dots above Play with the numerical round count on their right. The header contains only the level/lesson title alongside navigation and settings.
 
 - Keep a single centered Play melody button; do not add a separate replay button with the same action.
 
 - On final-round success, show Great job and confetti with fanfare first for 2.6 seconds, then display the persistent lesson-results panel.
+
+- Confirm before Levels navigation abandons an active lesson; cancellation preserves the attempt. Explain that only current-attempt progress is lost. Piano touch keys use press-only highlighting, matching guitar; hover effects are limited to fine pointers with hover support.
